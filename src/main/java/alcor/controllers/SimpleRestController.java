@@ -3,7 +3,9 @@ package alcor.controllers;
 import alcor.calculator.AlcoholCalculator;
 import alcor.model.AlcoholAmount;
 import alcor.model.Beverage;
+import alcor.model.UnitResponse;
 import alcor.repository.BeverageRepository;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+//@Api(value = "Alcohol", description = "Operations about Alcoholcalculations")
 public class SimpleRestController {
 
 
@@ -21,26 +24,20 @@ public class SimpleRestController {
     @Autowired
     BeverageRepository beverageRepository;
 
-//    @RequestMapping(value = "/getunitsforbeverages",
-//            method = RequestMethod.POST,
-//            produces = "application/json"
-//    )
-//    public ResponseEntity<String> getUnitsForBeverages(@RequestBody List<String> beverageList){
-//
-//        List<Beverage> beverages = beverageRepository.findByNameList(beverageList);
-//        return new ResponseEntity<String>("Hello World ", HttpStatus.OK);
-//    }
+    private int times = 0;
 
     @RequestMapping(value = "/getunitsforbeverages",
             method = RequestMethod.POST,
             produces = "application/json"
     )
-    public ResponseEntity<Double> getUnitsForBeverages(@RequestBody List<Beverage> beverageList){
-
-        return new ResponseEntity<Double>(
+    public ResponseEntity<UnitResponse> getUnitsForBeverages(@RequestBody List<Beverage> beverageList){
+        System.out.println("this is called: " + ++times);
+        return new ResponseEntity<UnitResponse>(
                 alcoholCalculator.getAlcoholAsNumberOfStandardBeers(alcoholCalculator.getAlcoholForBeverages(beverageList)),
                 HttpStatus.OK);
     }
+
+
 }
 
 

@@ -2,6 +2,8 @@ package alcor.calculator;
 
 import alcor.model.AlcoholAmount;
 import alcor.model.Beverage;
+
+import alcor.model.UnitResponse;
 import alcor.repository.BeverageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,13 +19,16 @@ public class AlcoholCalculator {
     @Autowired
     private BeverageRepository beverageRepository;
 
-    private Beverage standardPils;
 
-    @PostConstruct
-    private void setStandardPils(){
-        standardPils = beverageRepository.findByName("standard_pils");
+    @Autowired
+    private Beverage standardBeer;
+//    private Beverage standardPils = new Beverage.BeverageBuilder().alcoholPercentage(5.0).mililiter(250).build();
 
-    }
+//    @PostConstruct
+//    private void setStandardPils(){
+//        standardPils = beverageRepository.findByName("standard_pils");
+//
+//    }
 
     public AlcoholAmount getAlcoholMiligramsForOneBeverage(Beverage beverage){
         double grams = ((beverage.getAlcoholPercentage() / 100)  * beverage.getMililiter()) * 0.789;
@@ -38,9 +43,9 @@ public class AlcoholCalculator {
 
     }
 
-    public double getAlcoholAsNumberOfStandardBeers(AlcoholAmount alcohol){
-        double gramsStandardbeer = getAlcoholMiligramsForOneBeverage(standardPils).getGrams();
-        return alcohol.getGrams() / gramsStandardbeer;
+    public UnitResponse getAlcoholAsNumberOfStandardBeers(AlcoholAmount alcohol){
+        double gramsStandardbeer = getAlcoholMiligramsForOneBeverage(standardBeer).getGrams();
+        return new UnitResponse(alcohol.getGrams() / gramsStandardbeer);
     }
 
     private AlcoholAmount getSingleAlcoholAmount(List<AlcoholAmount> alcoholAmountList){
